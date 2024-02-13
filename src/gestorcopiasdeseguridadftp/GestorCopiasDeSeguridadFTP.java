@@ -5,14 +5,16 @@ package gestorcopiasdeseguridadftp;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
 public class GestorCopiasDeSeguridadFTP {
+
     public static void main(String[] args) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        Scanner sc = new Scanner(System.in);
         try {
             // Solicitar el nombre de la carpeta
             System.out.print("Ingrese el nombre de la carpeta a comprimir y subir al servidor FTP: ");
-            String nombreCarpeta = br.readLine();
+            String nombreCarpeta = sc.nextLine();
 
             // Comprimir la carpeta
             String nombreCarpetaZip = comprimirCarpeta(nombreCarpeta);
@@ -23,22 +25,30 @@ public class GestorCopiasDeSeguridadFTP {
             System.out.println("¡La operación se ha completado con éxito!");
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private static String comprimirCarpeta(String nombreCarpeta) throws IOException {
+    private static String comprimirCarpeta(String nombreCarpeta) throws IOException, InterruptedException {
         // Crear un nombre de archivo comprimido basado en la fecha y hora actual
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
         String nombreCarpetaZip = nombreCarpeta + "_" + dateFormat.format(new Date()) + ".zip";
 
-        // Ejecutar el comando zip en un proceso secundario para comprimir la carpeta
-        Process process = Runtime.getRuntime().exec("7z a " + nombreCarpetaZip + " " + nombreCarpeta);
-        try {
-            process.waitFor(); // Esperar a que termine el proceso de compresión
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        // Crear el proceso para comprimir la carpeta usando ProcessBuilder
+        ProcessBuilder processBuilder = new ProcessBuilder("7z", "a", nombreCarpetaZip, nombreCarpeta);
+        Process process = processBuilder.start();
+
+        // Esperar a que el proceso de compresión termine
+        int exitCode = process.waitFor();
+
+        if (exitCode == 0) {
+            // La compresión se realizó correctamente
+            return nombreCarpetaZip;
+        } else {
+            // La compresión falló
+            throw new IOException("La compresión de la carpeta falló con código de salida: " + exitCode);
         }
-        return nombreCarpetaZip;
     }
 
     private static void subirAFTP(String nombreFicheroZip) {
