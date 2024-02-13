@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="ant.commons.net" type="repository">
+    <properties maven-id="ant:ant-commons-net:1.6.4" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/ant/ant-commons-net/1.6.4/ant-commons-net-1.6.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
