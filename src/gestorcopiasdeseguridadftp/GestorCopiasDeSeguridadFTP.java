@@ -1,14 +1,20 @@
 package gestorcopiasdeseguridadftp;
 
-
-
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
+/**
+ * Esta clase proporciona una aplicación para realizar copias de seguridad de una carpeta
+ * comprimida y subirla a un servidor FTP.
+ */
 public class GestorCopiasDeSeguridadFTP {
 
+    /**
+     * El método principal de la aplicación.
+     * @param args Los argumentos de la línea de comandos (no se utilizan en este caso).
+     */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         try {
@@ -30,6 +36,14 @@ public class GestorCopiasDeSeguridadFTP {
         }
     }
 
+    /**
+     * Comprime una carpeta en un archivo ZIP.
+     * @param nombreCarpeta El nombre de la carpeta a comprimir.
+     * @return El nombre del archivo ZIP comprimido.
+     * @throws IOException Si ocurre un error de E/S durante la compresión.
+     * @throws InterruptedException Si el hilo actual es interrumpido mientras espera
+     * que termine el proceso de compresión.
+     */
     private static String comprimirCarpeta(String nombreCarpeta) throws IOException, InterruptedException {
         // Crear un nombre de archivo comprimido basado en la fecha y hora actual
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
@@ -51,6 +65,10 @@ public class GestorCopiasDeSeguridadFTP {
         }
     }
 
+    /**
+     * Sube un archivo al servidor FTP.
+     * @param nombreFicheroZip El nombre del archivo ZIP a subir.
+     */
     private static void subirAFTP(String nombreFicheroZip) {
         // Configurar la conexión FTP
         String server = "127.0.0.1";
@@ -68,5 +86,3 @@ public class GestorCopiasDeSeguridadFTP {
         }
     }
 }
-
-
