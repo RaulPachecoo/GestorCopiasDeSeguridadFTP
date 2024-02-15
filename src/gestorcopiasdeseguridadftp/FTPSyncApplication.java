@@ -43,15 +43,10 @@ public class FTPSyncApplication {
         clienteFTP.connect(SERVIDOR_FTP);
         clienteFTP.login(USUARIO, CONTRASENA);
 
-
         List<String> carpetasRemotas = obtenerCarpetasRemotas(clienteFTP, CARPETA_REMOTA);
         List<String> archivosRemotos = obtenerArchivosRemotos(clienteFTP, CARPETA_REMOTA);
         List<String> archivosLocales = obtenerArchivosLocales(CARPETA_LOCAL);
         List<String> carpetasLocales = obtenerCarpetasLocales(CARPETA_LOCAL);
-
-
-
-
 
         for (String carpetaRemota : carpetasRemotas) {
             if (!carpetasLocales.contains(carpetaRemota)) {
@@ -191,6 +186,7 @@ public class FTPSyncApplication {
     // Métodos auxiliares para la manipulación de archivos y carpetas en el servidor remoto...
     private static void borrarArchivo(FTPClient clienteFTP, String archivo) throws IOException {
         clienteFTP.deleteFile(archivo);
+        System.out.println("Archivo " + archivo + " eliminado");
     }
 
     private static void borrarCarpeta(FTPClient clienteFTP, String carpeta) throws IOException {
@@ -208,6 +204,7 @@ public class FTPSyncApplication {
         }
         // Después de eliminar todos los archivos y subcarpetas, intentar eliminar la carpeta principal
         clienteFTP.removeDirectory(carpeta);
+        System.out.println("Carpeta " + carpeta + " eliminada");
     }
 
     private static void añadirArchivo(FTPClient clienteFTP, String archivo) throws IOException {
@@ -215,6 +212,7 @@ public class FTPSyncApplication {
         FileInputStream fis = new FileInputStream(localFile);
         clienteFTP.storeFile(archivo, fis);
         fis.close();
+        System.out.println("Archivo " + archivo + " subido");
     }
 
     private static void añadirCarpeta(FTPClient clienteFTP, String carpeta) throws IOException {
@@ -224,6 +222,7 @@ public class FTPSyncApplication {
         for (String archivo : archivosLocales) {
             añadirArchivo(clienteFTP, carpeta + "/" + archivo); // Subir cada archivo al servidor remoto dentro de la carpeta creada
         }
+        System.out.println("Carpeta " + carpeta + " subida");
     }
 
 
