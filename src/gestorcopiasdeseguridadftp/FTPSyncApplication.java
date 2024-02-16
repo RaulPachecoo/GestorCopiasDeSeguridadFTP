@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Clase que proporciona métodos para sincronizar archivos y carpetas locales con un servidor FTP remoto.
@@ -23,8 +25,20 @@ public class FTPSyncApplication {
     private static final long TIEMPO_REFRESCO = 15000; // 15 segundos
 
     public static void main(String[] args) throws IOException {
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+
         while (true) {
-            sincronizar();
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sincronizar();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
             try {
                 Thread.sleep(TIEMPO_REFRESCO);
             } catch (InterruptedException e) {
